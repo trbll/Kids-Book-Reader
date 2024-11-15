@@ -3,9 +3,12 @@ import base64
 import ollama
 from openai import OpenAI
 from prompts import READER_STORY_TEXT_EXTRACTION_MESSAGES
-from keys import OPENAI_API_KEY
+from keys import OPENAI_API_KEY, ELEVENLABS_API_KEY, ELEVENLABS_VOICE_ID
+from elevenlabs import Voice, play
+from elevenlabs.client import ElevenLabs
 
 openai_client = OpenAI(api_key=OPENAI_API_KEY)
+eleven_client = ElevenLabs(api_key=ELEVENLABS_API_KEY)
 
 def capture_image():
     """Capture an image from the document camera and return the processed frame"""
@@ -76,6 +79,8 @@ def analyze_image_ollama(frame):
 
 def analyze_image_openai(frame):
     """Analyze the given image frame using OpenAI vision model"""
+    print("Analyzing image...")
+
     if frame is None:
         return None
         
@@ -112,6 +117,19 @@ def analyze_image_openai(frame):
 
     return extracted_text
 
+def generate_speech(text):
+    """Generate and play speech from the given text using ElevenLabs"""
+    print("Generating speech...")
+    try:
+        audio = eleven_client.generate(
+            text=text,
+            voice=Voice(voice_id=ELEVENLABS_VOICE_ID),
+            model="eleven_turbo_v2_5"
+        )
+        play(audio)
+    except Exception as e:
+        print(f"Error generating speech: {e}")
+
 def main():
     """Main function to coordinate image capture and analysis"""
     print("Press SPACE to capture and analyze the next page. Press 'q' to quit.")
@@ -137,11 +155,12 @@ def main():
             frame = preview
 
             if frame is not None:
-                print("Analyzing image...")
                 description = analyze_image_openai(frame)
                 if description:
                     print("\nText from page:", description)
+                    generate_speech(description)  # Generate and play speech
                     print("\nPress SPACE for next page or 'q' to quit.")
+
         elif key == ord('q'):  # Q pressed
             break
     
