@@ -1,0 +1,8 @@
+# OpenAI Vision Settings
+TARGET_LANGUAGE = 'English'
+
+# Speech Synthesis Settings
+VOICE_TYLER = 'C7fLv2cb8ABoYwwSkbGP'
+VOICE_DANIEL = 'onwK4e9ZLuTAKqWW03F9'
+
+ELEVENLABS_VOICE_ID = VOICE_DANIEL
