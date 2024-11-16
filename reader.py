@@ -1,6 +1,5 @@
 import cv2
 import base64
-import ollama
 from openai import OpenAI
 from elevenlabs import Voice, play
 from elevenlabs.client import ElevenLabs
@@ -105,7 +104,7 @@ def main():
     cv2.resizeWindow('Press SPACE to capture, Q to quit', 640, 480)
     
     # Initialize camera and show preview
-    camera = cv2.VideoCapture(1)
+    camera = cv2.VideoCapture(0)
     
     while True:
         # Show camera preview
